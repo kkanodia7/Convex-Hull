@@ -1,3 +1,5 @@
+// Created by Kushal Kanodia on Oct 1, 2018
+
 #include <iostream>
 #include <cmath>
 #include <ctime>
@@ -170,3 +172,9 @@ int main() {
     cout << "Generated " << pts << " points and found convex hull in ~" << grahamScan(pts) << " seconds.";
     return 0;
 }
+
+// Potential Future Additions:
+//  - User can select width and height of image
+//  - Increase efficiency of Graham Scan
+//  - Output to other file formats (png, jpg)
+//  - Add color to convex hull to increase its visibility
