@@ -1,13 +1,13 @@
 #include <iostream>
-#include <math.h>
-#include <time.h>
+#include <cmath>
+#include <ctime>
 #include <chrono>
-#include <stdlib.h>
+#include <cstdlib>
 #include <fstream>
 #include <list>
 using namespace std;
 using namespace std::chrono;
-#define S 700
+#define S 600
 
 class Point {
     private:
@@ -37,16 +37,13 @@ void setPixel(int image[S][S], int x, int y) {
     if (x >= 0 && x < S && y >= 0 && y < S)
         image[x][y] = 0;
 }
+
 void setPoint(int image[S][S], int x, int y) {
-    setPixel(image, x, y);
-    setPixel(image, x-1, y);
-    setPixel(image, x+1, y);
-    setPixel(image, x-1, y-1);
-    setPixel(image, x, y-1);
-    setPixel(image, x+1, y-1);
-    setPixel(image, x-1, y+1);
-    setPixel(image, x, y+1);
-    setPixel(image, x+1, y+1);
+    for (int j = x-1; j <= x+1; j++) {
+        for (int k = y-1; k <= y+1; k++) {
+            setPixel(image, j, k);
+        }
+    }
 }
 
 void drawLine(int image[S][S], int x1, int y1, int x2, int y2) {
@@ -91,15 +88,15 @@ Point underTop(list<Point>* stack) {
 void grahamScan(int n) {
     int img[S][S];
 
-    for (int x = 0; x < S; x++) {
-        for (int y = 0; y < S; y++) {
-            img[x][y] = 1;
+    for (auto & x : img) {
+        for (int & y : x) {
+            y = 1;
         }
     }
 
-    srand(time(NULL));
+    srand(time(nullptr));
 
-    list<Point>* ptArr = new list<Point>;
+    auto* ptArr = new list<Point>;
     Point pt = Point(rand() % (S), rand() % (S));
     ptArr->push_front(pt);
     Point p = Point(pt.getX(), pt.getY());
@@ -126,10 +123,10 @@ void grahamScan(int n) {
     }
 
 
-    list<Point>* ptStack = new list<Point>;
+    auto* ptStack = new list<Point>;
     int count = 0;
 
-    for (auto& i : p.getSorted(*ptArr)) {
+    for (auto& i : Point::getSorted(*ptArr)) {
         if (count < 3)
             ptStack->push_front(i);
         else {
@@ -152,25 +149,27 @@ void grahamScan(int n) {
             drawLine(img, px, py, ptStack->front().getX(), ptStack->front().getY());
     }
 
-//	ofstream outputFile;
-//	outputFile.open("gsHull.ppm");
-//	outputFile << "P3  " << S << "  " << S << "  1\n";
-//	for (int y = 0; y < S; y++) {
-//		for (int x = 0; x < S; x++) {
-//			outputFile << img[x][y] << " " << img[x][y] << " " << img[x][y] << " ";
-//		}
-//		outputFile << "\n";
-//	}
-//	outputFile.close();
+	ofstream outputFile;
+	outputFile.open("gsHull.ppm");
+	outputFile << "P3  " << S << "  " << S << "  1\n";
+	for (int y = 0; y < S; y++) {
+		for (auto & x : img) {
+			outputFile << x[y] << " " << x[y] << " " << x[y] << " ";
+		}
+		outputFile << "\n";
+	}
+	outputFile.close();
 }
 
 
 int main() {
-    int i = 1500;
+    int pts;
+    cout << "Enter the number of points to be generated: ";
+    cin >> pts;
     auto start = high_resolution_clock::now();
-    grahamScan(i);
+    grahamScan(pts);
     auto stop = high_resolution_clock::now();
     auto duration = duration_cast<milliseconds>(stop - start);
-    cout << "Convex hull of " << i << " points found in " << duration.count() / 1000.0 << " seconds";
+    cout << "Convex hull of " << pts << " points found in " << duration.count() / 1000.0 << " seconds";
     return 0;
 }
