@@ -178,3 +178,4 @@ int main() {
 //  - Increase efficiency of Graham Scan
 //  - Output to other file formats (png, jpg)
 //  - Add color to convex hull to increase its visibility
+//  - Increase randomness of points, resolve warnings
