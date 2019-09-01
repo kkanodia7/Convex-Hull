@@ -7,7 +7,7 @@
 #include <list>
 using namespace std;
 using namespace std::chrono;
-#define S 600
+#define S 700
 
 class Point {
     private:
@@ -85,7 +85,7 @@ Point underTop(list<Point>* stack) {
     return newTop;
 }
 
-void grahamScan(int n) {
+double grahamScan(int n) {
     int img[S][S];
 
     for (auto & x : img) {
@@ -94,15 +94,15 @@ void grahamScan(int n) {
         }
     }
 
-    srand(time(nullptr));
+    auto start = high_resolution_clock::now();
 
+    srand(time(nullptr));
     auto* ptArr = new list<Point>;
     Point pt = Point(rand() % (S), rand() % (S));
     ptArr->push_front(pt);
     Point p = Point(pt.getX(), pt.getY());
     setPoint(img, pt.getX(), pt.getY());
     int startPt = -1;
-
 
     for (int i = 1; i < n; i++) {
         Point np = Point(rand() % (S), rand() % (S));
@@ -116,12 +116,10 @@ void grahamScan(int n) {
         setPoint(img, np.getX(), np.getY());
     }
 
-
     for (auto& i : *ptArr) {
         if (i.getAngle() != startPt)
             i.setAngle(atan2(i.getY() - p.getY(), i.getX() - p.getX()));
     }
-
 
     auto* ptStack = new list<Point>;
     int count = 0;
@@ -136,6 +134,8 @@ void grahamScan(int n) {
         }
         count++;
     }
+
+    auto stop = high_resolution_clock::now();
 
     ptStack->push_front(p);
     int px = 0;
@@ -159,17 +159,14 @@ void grahamScan(int n) {
 		outputFile << "\n";
 	}
 	outputFile.close();
+    auto duration = duration_cast<milliseconds>(stop - start);
+    return duration.count() / 1000.0;
 }
-
 
 int main() {
     int pts;
     cout << "Enter the number of points to be generated: ";
     cin >> pts;
-    auto start = high_resolution_clock::now();
-    grahamScan(pts);
-    auto stop = high_resolution_clock::now();
-    auto duration = duration_cast<milliseconds>(stop - start);
-    cout << "Convex hull of " << pts << " points found in " << duration.count() / 1000.0 << " seconds";
+    cout << "Generated " << pts << " points and found convex hull in ~" << grahamScan(pts) << " seconds.";
     return 0;
 }
