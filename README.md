@@ -5,4 +5,4 @@ The convex hull of a set of points is the smallest convex shape that contains al
   
 This program takes an input for the number of points to generate, randomly generates them in a 700x700 blank image, and uses a Graham Scan to find the convex hull.  
   
-It returns the time the Graham Scan took as well as a ppm image file (in P3 format) of the points and the convex hull.
+It prints the time the Graham Scan took and creates a ppm image file (in P3 format) of the points and the convex hull.
